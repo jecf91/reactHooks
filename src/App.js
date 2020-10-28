@@ -1,26 +1,38 @@
-import React , { useState } from 'react';
-import { useForm } from './useForm';
-import { useFetch } from './useFetch';
+import React, { useState } from 'react';
+import { Switch, Route, Link, BrowserRouter } from 'react-router-dom';
+import { UserContext } from './Context/userContext';
 
+import Home from './Components/Home';
+import About from './Components/About';
 
 const App = () => {
 
-  const [ values, defineValues ] = useForm({email:'', password:''});
-
-  const [counter , setCounter ] = useState(0);
-
-  const {response, loading} = useFetch(`http://numbersapi.com/${counter}/trivia`);
+  const [ state, setstate ] = useState('hello from state')
 
   return(
-    <div>
-      <input name="email" type="text" value={values.email} onChange={defineValues} />
-      <input name="password" type="password" value={values.password} onChange={defineValues} />
-      <button onClick={() => setCounter(counter+1)}>Change number</button>
-      <p>{values.email}</p>
-      <p>{values.password}</p>
-      <p>{loading ? "loading..." : response}</p>
-    </div>
-  )
+    <BrowserRouter>
+      <div>
+        <nav>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/about">About</Link>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div>
+       <UserContext.Provider value={{state, setstate}}> 
+        <Switch>
+          <Route exact path="/" component={Home}/>
+          <Route path="/about" component={About}/>
+        </Switch>
+        </UserContext.Provider>
+      </div>
+    </BrowserRouter>
+  )   
 }
 
 export default App;
